@@ -1,3 +1,4 @@
+import { iterate } from './utils';
 import { world } from './world';
 
 export class Engine {
@@ -19,8 +20,5 @@ export class Engine {
   }
   private debugDraw() {
     const body = world.getBodyList();
-    if (!body) {
-      return;
-    }
   }
 }
