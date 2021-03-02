@@ -17,5 +17,7 @@
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "planck-js": "0.3.26"
+  }
 }
