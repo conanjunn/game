@@ -18,20 +18,14 @@ const addGround = throttle(2, () => {
 
 engine.addTick(addGround);
 engine.addTick(() => {
-  const arr: number[] = [];
-  groundList.forEach((ground, index) => {
+  groundList = groundList.filter((ground) => {
     const pos: Vec2 = ground.body.getPosition();
     if (pos.y < -55) {
-      arr.push(index);
+      world.destroyBody(ground.body);
+      return false;
     }
     ground.body.setPosition(Vec2.sub(pos, Vec2(0, 0.1)));
-  });
-  groundList = groundList.filter((item, index) => {
-    if (arr.indexOf(index) === -1) {
-      return true;
-    }
-    world.destroyBody(groundList[index].body);
-    return false;
+    return true;
   });
 });
 
