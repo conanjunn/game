@@ -1,4 +1,4 @@
-import { iterate } from './utils';
+import { DebugDraw } from './debugDraw';
 import { world } from './world';
 
 export class Engine {
@@ -12,13 +12,10 @@ export class Engine {
 
       world.ctx.clearRect(0, 0, world.canvas.width, world.canvas.height);
 
-      this.debugDraw();
+      new DebugDraw();
 
       this.prevTime = time;
       this.runner();
     });
-  }
-  private debugDraw() {
-    const body = world.getBodyList();
   }
 }
