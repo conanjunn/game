@@ -38,6 +38,12 @@ export class Player {
       this.body.setLinearVelocity(Vec2(-10, speed.y));
       return;
     }
+    if (speed.x > 0) {
+      this.body.setLinearVelocity(
+        Vec2.sub(speed, Vec2(deltaTime * this.acceleration.x * 3, 0))
+      );
+      return;
+    }
     this.body.setLinearVelocity(
       Vec2.sub(speed, Vec2(deltaTime * this.acceleration.x, 0))
     );
@@ -56,6 +62,12 @@ export class Player {
     const speed = this.body.getLinearVelocity();
     if (speed.x >= 10) {
       this.body.setLinearVelocity(Vec2(10, speed.y));
+      return;
+    }
+    if (speed.x < 0) {
+      this.body.setLinearVelocity(
+        Vec2.add(speed, Vec2(deltaTime * this.acceleration.x * 3, 0))
+      );
       return;
     }
     this.body.setLinearVelocity(
@@ -77,25 +89,30 @@ export class Player {
     const stopLeft = this.stopLeft.bind(this);
     const stopRight = this.stopRight.bind(this);
     const goRight = this.goRight.bind(this);
+    const keydownList = keyboard.getKeydownList();
     keyboard.addKeydownOnceEvent(37, () => {
+      engine.removeTick(goRight);
       engine.removeTick(stopLeft);
       engine.removeTick(stopRight);
       engine.addTick(goLeft);
     });
     keyboard.addKeyupEvent(37, () => {
       engine.removeTick(goLeft);
-      engine.removeTick(goRight);
-      engine.addTick(stopLeft);
+      if (!keydownList[39]) {
+        engine.addTick(stopLeft);
+      }
     });
     keyboard.addKeydownOnceEvent(39, () => {
       engine.removeTick(stopLeft);
       engine.removeTick(stopRight);
+      engine.removeTick(goLeft);
       engine.addTick(goRight);
     });
     keyboard.addKeyupEvent(39, () => {
-      engine.removeTick(goLeft);
       engine.removeTick(goRight);
-      engine.addTick(stopRight);
+      if (!keydownList[37]) {
+        engine.addTick(stopRight);
+      }
     });
   }
 }
