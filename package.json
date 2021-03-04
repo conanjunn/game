@@ -18,6 +18,8 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
-    "planck-js": "0.3.26"
+    "@types/websocket": "^1.0.1",
+    "planck-js": "0.3.26",
+    "websocket": "^1.0.33"
   }
 }

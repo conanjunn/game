@@ -8,8 +8,10 @@ export class Player {
   readonly body: Body;
   readonly center: Readonly<Vec2>;
   readonly acceleration: Readonly<Vec2> = Vec2(10, 0);
+  readonly id: number;
 
-  constructor(center: Vec2) {
+  constructor(id: number, center: Vec2, isAnother = false) {
+    this.id = id;
     this.center = center;
     this.body = world.createDynamicBody({
       fixedRotation: true,
@@ -17,6 +19,7 @@ export class Player {
       allowSleep: true,
       angularDamping: 0,
       linearDamping: 0,
+      gravityScale: isAnother ? 0 : 1,
     });
     this.body.createFixture(Circle(Vec2(0, 0), this.radius), {
       friction: 0,
@@ -30,7 +33,9 @@ export class Player {
       density: 10,
     });
 
-    this.event();
+    if (!isAnother) {
+      this.event();
+    }
   }
   goLeft(deltaTime: number) {
     const speed = this.body.getLinearVelocity();
