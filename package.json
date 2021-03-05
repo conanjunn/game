@@ -18,8 +18,10 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "@types/seedrandom": "^2.4.28",
     "@types/websocket": "^1.0.1",
     "planck-js": "0.3.26",
+    "seedrandom": "^3.0.5",
     "websocket": "^1.0.33"
   }
 }

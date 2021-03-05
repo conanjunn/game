@@ -9,8 +9,11 @@ export interface SendMsg {
 type Handler = { (msg: SendMsg): void };
 
 export class Socket {
-  constructor() {
-    this.client = new w3cwebsocket('ws://localhost:8080/', 'echo-protocol');
+  constructor(id: number) {
+    this.client = new w3cwebsocket(
+      `ws://localhost:8080?id=${id}`,
+      'echo-protocol'
+    );
     this.client.onclose = this.onclose.bind(this);
     this.client.onerror = this.onerror.bind(this);
     this.client.onopen = this.onopen.bind(this);

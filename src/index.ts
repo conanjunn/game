@@ -2,7 +2,7 @@ import { Math, Vec2 } from 'planck-js';
 import { Ground } from './ground';
 import { engine } from './engine';
 import { Player } from './player';
-import { throttle } from './utils';
+import { SeedRandom, throttle } from './utils';
 import { world } from './world';
 import { SendMsg, Socket } from './socket';
 
@@ -18,9 +18,10 @@ if (playerId === 1) {
 let groundList: Ground[] = [new Ground(10, 1, Vec2(20, 50))];
 
 if (playerId === 1) {
+  const seedRandom = new SeedRandom('abc');
   engine.addTick(
     throttle(2, () => {
-      const a = Math.random(0, 40);
+      const a = seedRandom.random(0, 40);
       groundList.push(new Ground(10, 1, Vec2(a, 50)));
     })
   );
@@ -37,7 +38,7 @@ if (playerId === 1) {
   });
 }
 
-const socket = new Socket();
+const socket = new Socket(playerId);
 let another: Player | null = null;
 socket.setHandler((e: SendMsg) => {
   if (e.playerId === playerId) {

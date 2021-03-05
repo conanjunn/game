@@ -2,7 +2,6 @@ var WebSocketServer = require('websocket').server;
 var http = require('http');
 
 var connections = {};
-var connectionIDCounter = 0;
 
 var server = http.createServer(function (request, response) {
   console.log(new Date() + ' Received request for ' + request.url);
@@ -13,7 +12,7 @@ server.listen(8080, function () {
   console.log(new Date() + ' Server is listening on port 8080');
 });
 
-wsServer = new WebSocketServer({
+const wsServer = new WebSocketServer({
   httpServer: server,
   // You should not use autoAcceptConnections for production
   // applications, as it defeats all standard cross-origin protection
@@ -40,13 +39,11 @@ wsServer.on('request', function (request) {
 
   var connection = request.accept('echo-protocol', request.origin);
 
-  connection.id = connectionIDCounter++;
-  connections[connection.id] = connection;
+  connections[request.resourceURL.query.id] = connection;
   console.log(new Date() + ' Connection ID ' + connection.id + ' accepted.');
   connection.on('message', function (message) {
     if (message.type === 'utf8') {
-      console.log('Received Message: ' + message.utf8Data);
-      broadcast(message.utf8Data);
+      broadcast(JSON.parse(message.utf8Data));
     }
   });
 
@@ -69,8 +66,8 @@ wsServer.on('request', function (request) {
 function broadcast(data) {
   Object.keys(connections).forEach(function (key) {
     var connection = connections[key];
-    if (connection.connected) {
-      connection.sendUTF(data);
+    if (connection.connected && +data.playerId !== +key) {
+      connection.sendUTF(JSON.stringify(data));
     }
   });
 }
