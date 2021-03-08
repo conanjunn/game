@@ -4,7 +4,7 @@ import { engine } from './engine';
 import { Player } from './player';
 import { SeedRandom, throttle } from './utils';
 import { world } from './world';
-import { SendMsg, Socket } from './socket';
+import { Socket, Types } from './socket';
 
 const urlQuery: string = location.search.split('?')[1];
 const playerId: number = parseInt(urlQuery.split('=')[1], 10);
@@ -40,21 +40,22 @@ if (playerId === 1) {
 
 const socket = new Socket(playerId);
 let another: Player | null = null;
-socket.setHandler((e: SendMsg) => {
-  if (e.playerId === playerId) {
+socket.addHandler((resp: Types) => {
+  if (resp.type !== 1) {
     return;
   }
   if (!another) {
-    another = new Player(e.playerId, e.pos, true);
+    another = new Player(resp.playerId, resp.pos, true);
     return;
   }
-  another.body.setPosition(e.pos);
+  another.body.setPosition(resp.pos);
 });
 
 if (player) {
   engine.addTick(
     throttle(0.01, () => {
       socket.send({
+        type: 1,
         playerId,
         pos: <Vec2>player?.body.getPosition(),
       });
